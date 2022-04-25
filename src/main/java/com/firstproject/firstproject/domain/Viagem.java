@@ -1,59 +1,49 @@
 package com.firstproject.firstproject.domain;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.ManyToMany;
+import javax.persistence.OneToOne;
 
 @Entity
-public class Categoria implements Serializable {
+public class Viagem implements Serializable{
     
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
+
+    @OneToOne
+    private Destino destino;
+
     @Column(nullable = false)
-    private String nome;
-
-    @ManyToMany(mappedBy = "categorias")
-    private List<Produto> produtos = new ArrayList<>();
+    private Double preco;
     
-    public Categoria(){
-
+    public Viagem() {
     }
 
-    public Categoria(Integer id, String nome){
+    public Viagem(Integer id, Destino destino) {
         this.id = id;
-        this.nome = nome;
+        this.destino = destino;
     }
 
-    public List<Produto> getProdutos() {
-        return produtos;
-    }
-
-    public void setProdutos(List<Produto> produtos) {
-        this.produtos = produtos;
-    }
-
-    public Integer getId(){
+    public Integer getId() {
         return id;
     }
 
-    public void setId(Integer id){
+    public void setId(Integer id) {
         this.id = id;
     }
 
-    public String getNome(){
-        return nome;
+    public Destino getDestino() {
+        return destino;
     }
 
-    public void setNome(String nome){
-        this.nome = nome;
+    public void setDestino(Destino destino) {
+        this.destino = destino;
     }
 
     @Override
@@ -72,7 +62,7 @@ public class Categoria implements Serializable {
             return false;
         if (getClass() != obj.getClass())
             return false;
-        Categoria other = (Categoria) obj;
+        Viagem other = (Viagem) obj;
         if (id == null) {
             if (other.id != null)
                 return false;
@@ -81,8 +71,8 @@ public class Categoria implements Serializable {
         return true;
     }
 
-
-
+    
+    
     
 
 }

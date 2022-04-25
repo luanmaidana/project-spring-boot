@@ -3,8 +3,8 @@ package com.firstproject.firstproject.services;
 import java.util.List;
 import java.util.Optional;
 
-import com.firstproject.firstproject.domain.Categoria;
-import com.firstproject.firstproject.repositories.CategoriaRepository;
+import com.firstproject.firstproject.domain.Destino;
+import com.firstproject.firstproject.repositories.DestinoRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -12,32 +12,30 @@ import org.springframework.stereotype.Service;
 import exceptions.NotFoundExceptions;
 
 @Service
-public class CategoriaService {
+public class DestinoService {
     
     // Dependencia do repositorio instanciada 
     @Autowired
-    private CategoriaRepository repo;
+    private DestinoRepository repo;
 
     // Método para buscar categoria por id
-    public Optional<Categoria> buscar(Integer id) throws NotFoundExceptions{
-        Optional<Categoria> obj = repo.findById(id);
+    public Optional<Destino> buscarPorId(Integer id) throws NotFoundExceptions{
+        Optional<Destino> obj = repo.findById(id);
         
         if(obj.isEmpty()) { throw new NotFoundExceptions(404, "Não encontrado!");}
 
         return obj;
     }
 
-    public List<Categoria> buscarTodos(){
+    public List<Destino> buscarTodos(){
 
-        List<Categoria> obj = repo.findAll();
+        List<Destino> obj = repo.findAll();
 
         return obj;
 
     }
 
-    public Categoria addCategoria(Categoria obj){
-
-        obj.setId(null);
+    public Destino addCategoria(Destino obj){
 
         return repo.save(obj);
 

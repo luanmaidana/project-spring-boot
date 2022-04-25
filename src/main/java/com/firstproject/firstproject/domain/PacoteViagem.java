@@ -4,49 +4,71 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 
 @Entity
-public class Produto implements Serializable{
+public class PacoteViagem implements Serializable {
     
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @Column(nullable = false, length = 5)
     private String nome;
 
-    @Column(nullable = false)
     private Double preco;
 
-    @ManyToMany
-    @JoinTable(name="produto_categoria", 
-               joinColumns = @JoinColumn(name = "produto_id"), 
-               inverseJoinColumns = @JoinColumn(name = "categoria_id"))
-    private List<Categoria> categorias = new ArrayList<>();
+    private Integer dias;
+
+    @OneToOne
+    private Viagem viagem;
+
+    @OneToMany
+    @JoinTable(name="pacoteViagem_usuario", 
+               joinColumns = @JoinColumn(name = "viagem_id"), 
+               inverseJoinColumns = @JoinColumn(name = "usuario_id"))
+    private List<Usuario> usuarios = new ArrayList<>();
     
-    public Produto() {
+    public PacoteViagem(){
+
     }
 
-    public Produto(Integer id, String nome, Double preco) {
+    public PacoteViagem(Integer id, Viagem viagem, String nome, Double preco, Integer dias){
         this.id = id;
+        this.viagem = viagem;
         this.nome = nome;
         this.preco = preco;
+        this.dias = dias;
     }
 
-    public Integer getId() {
+    public List<Usuario> getUsuarios() {
+        return usuarios;
+    }
+
+    public void setUsuarios(List<Usuario> usuarios) {
+        this.usuarios = usuarios;
+    }
+
+    public Integer getId(){
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(Integer id){
         this.id = id;
+    }
+
+    public Viagem getViagem(){
+        return viagem;
+    }
+
+    public void setNome(Viagem viagem){
+        this.viagem = viagem;
     }
 
     public String getNome() {
@@ -65,12 +87,12 @@ public class Produto implements Serializable{
         this.preco = preco;
     }
 
-    public List<Categoria> getCategorias() {
-        return categorias;
+    public Integer getDias() {
+        return dias;
     }
 
-    public void setCategorias(List<Categoria> categorias) {
-        this.categorias = categorias;
+    public void setDias(Integer dias) {
+        this.dias = dias;
     }
 
     @Override
@@ -89,7 +111,7 @@ public class Produto implements Serializable{
             return false;
         if (getClass() != obj.getClass())
             return false;
-        Produto other = (Produto) obj;
+        PacoteViagem other = (PacoteViagem) obj;
         if (id == null) {
             if (other.id != null)
                 return false;
@@ -98,8 +120,8 @@ public class Produto implements Serializable{
         return true;
     }
 
-    
-    
+
+
     
 
 }
