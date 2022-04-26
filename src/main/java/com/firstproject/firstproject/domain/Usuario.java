@@ -1,12 +1,14 @@
 package com.firstproject.firstproject.domain;
 
 import java.io.Serializable;
+import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToMany;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -34,6 +36,9 @@ public class Usuario implements Serializable{
 
     @Column(nullable = false)
     private String senha;
+
+    @ManyToMany
+    private List<Roles> roles;
 
     public String getNome() {
         return nome;

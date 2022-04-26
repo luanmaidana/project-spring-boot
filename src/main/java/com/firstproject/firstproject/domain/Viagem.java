@@ -1,12 +1,12 @@
 package com.firstproject.firstproject.domain;
 
 import java.io.Serializable;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
 
 @Entity
@@ -17,17 +17,13 @@ public class Viagem implements Serializable{
     private Integer id;
 
     @OneToOne
+    @JoinColumn(name = "destino_id")
     private Destino destino;
 
     @Column(nullable = false)
     private Double preco;
     
     public Viagem() {
-    }
-
-    public Viagem(Integer id, Destino destino) {
-        this.id = id;
-        this.destino = destino;
     }
 
     public Integer getId() {
@@ -42,8 +38,16 @@ public class Viagem implements Serializable{
         return destino;
     }
 
-    public void setDestino(Destino destino) {
-        this.destino = destino;
+    public void setDestino(Destino destino2) {
+        this.destino = destino2;
+    }
+
+    public Double getPreco() {
+        return preco;
+    }
+
+    public void setPreco(Double preco) {
+        this.preco = preco;
     }
 
     @Override

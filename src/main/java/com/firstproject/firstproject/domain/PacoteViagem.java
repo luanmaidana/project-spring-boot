@@ -4,13 +4,14 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.JoinColumn;
-import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 
 @Entity
@@ -20,16 +21,16 @@ public class PacoteViagem implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
+    @Column
     private String nome;
 
-    private Double preco;
-
+    @Column
     private Integer dias;
 
     @OneToOne
     private Viagem viagem;
 
-    @OneToMany
+    @ManyToMany
     @JoinTable(name="pacoteViagem_usuario", 
                joinColumns = @JoinColumn(name = "viagem_id"), 
                inverseJoinColumns = @JoinColumn(name = "usuario_id"))
@@ -39,11 +40,10 @@ public class PacoteViagem implements Serializable {
 
     }
 
-    public PacoteViagem(Integer id, Viagem viagem, String nome, Double preco, Integer dias){
+    public PacoteViagem(Integer id, Viagem viagem, String nome, Integer dias){
         this.id = id;
         this.viagem = viagem;
         this.nome = nome;
-        this.preco = preco;
         this.dias = dias;
     }
 
@@ -51,8 +51,8 @@ public class PacoteViagem implements Serializable {
         return usuarios;
     }
 
-    public void setUsuarios(List<Usuario> usuarios) {
-        this.usuarios = usuarios;
+    public void setUsuarios(Usuario usuario) {
+        this.usuarios.add(usuario);
     }
 
     public Integer getId(){
@@ -77,14 +77,6 @@ public class PacoteViagem implements Serializable {
 
     public void setNome(String nome) {
         this.nome = nome;
-    }
-
-    public Double getPreco() {
-        return preco;
-    }
-
-    public void setPreco(Double preco) {
-        this.preco = preco;
     }
 
     public Integer getDias() {

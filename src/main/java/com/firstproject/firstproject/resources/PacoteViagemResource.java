@@ -51,8 +51,11 @@ public class PacoteViagemResource {
     @RequestMapping(method = RequestMethod.POST)
     public ResponseEntity<PacoteViagem> postCategoria(@RequestBody PacoteViagem obj){
 
-        obj = service.addPacoteViagem(obj);
 
+        
+
+        obj = service.addPacoteViagem(obj);
+        
         return new ResponseEntity<>(obj, HttpStatus.OK);
 
     }

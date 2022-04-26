@@ -58,7 +58,7 @@ public class UsuarioResource{
         Optional<Usuario> usuario = usuarioService.buscarLogin(obj.getLogin());
 
         if(usuario.isEmpty()) {
-            System.out.println("caiu aqui!");
+            //System.out.println("caiu aqui!");
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(false);
         }
 

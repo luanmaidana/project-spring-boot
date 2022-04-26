@@ -35,7 +35,7 @@ public class DestinoService {
 
     }
 
-    public Destino addCategoria(Destino obj){
+    public Destino addDestino(Destino obj){
 
         return repo.save(obj);
 
