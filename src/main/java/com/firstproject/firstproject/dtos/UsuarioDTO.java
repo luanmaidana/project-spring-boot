@@ -9,9 +9,16 @@ public class UsuarioDTO {
     private String cpf;
     private String login;
     private String senha;
+    private Integer role_id;
     
     public String getLogin() {
         return login;
+    }
+    public Integer getRole_id() {
+        return role_id;
+    }
+    public void setRole_id(Integer role_id) {
+        this.role_id = role_id;
     }
     public void setLogin(String login) {
         this.login = login;

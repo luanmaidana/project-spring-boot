@@ -1,13 +1,17 @@
 package com.firstproject.firstproject.domain;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinTable;
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToMany;
 
 import lombok.AllArgsConstructor;
@@ -37,8 +41,12 @@ public class Usuario implements Serializable{
     @Column(nullable = false)
     private String senha;
 
-    @ManyToMany
-    private List<Roles> roles;
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(name="usuario_roles", 
+               joinColumns = @JoinColumn(name = "usuario_id"), 
+               inverseJoinColumns = @JoinColumn(name = "roles_id"))
+    private List<Roles> roles = new ArrayList<>();
+    
 
     public String getNome() {
         return nome;
@@ -70,6 +78,22 @@ public class Usuario implements Serializable{
 
     public void setSenha(String senha) {
         this.senha = senha;
+    }
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    public List<Roles> getRoles() {
+        return roles;
+    }
+
+    public void setRoles(Roles roles) {
+        this.roles.add(roles);
     }
 
     

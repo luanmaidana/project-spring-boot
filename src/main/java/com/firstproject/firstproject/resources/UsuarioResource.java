@@ -3,14 +3,16 @@ package com.firstproject.firstproject.resources;
 import java.util.List;
 import java.util.Optional;
 
+import com.firstproject.firstproject.Config.SecurityConfig;
+import com.firstproject.firstproject.domain.Roles;
 import com.firstproject.firstproject.domain.Usuario;
 import com.firstproject.firstproject.dtos.UsuarioDTO;
+import com.firstproject.firstproject.services.RoleService;
 import com.firstproject.firstproject.services.UsuarioService;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -29,7 +31,10 @@ public class UsuarioResource{
     private UsuarioService usuarioService;
 
     @Autowired
-    private PasswordEncoder encoder;
+    private SecurityConfig securityConfig;
+
+    @Autowired
+    private RoleService roleService;
 
     @GetMapping()
     public ResponseEntity<List<Usuario>> listarTodos(){
@@ -45,33 +50,36 @@ public class UsuarioResource{
         return ResponseEntity.ok(usuario);
     }
 
-    @RequestMapping(method = RequestMethod.POST)
-    public ResponseEntity<Usuario> post(@RequestBody Usuario usuario){
+    @PostMapping()
+    public ResponseEntity<Usuario> post(@RequestBody UsuarioDTO usuario) throws NotFoundExceptions{
 
-        usuario.setSenha(encoder.encode(usuario.getSenha()));
-        return ResponseEntity.ok(usuarioService.addUsuario(usuario));
+        Optional<Roles> roles = roleService.buscarPorId(usuario.getRole_id());
+
+        Usuario user =  new Usuario();
+        user.setLogin(usuario.getLogin());
+        user.setCpf(usuario.getCpf());
+        user.setNome(usuario.getNome());
+        user.setSenha(usuario.getSenha());
+        user.getRoles().add(roles.get());
+        user.setSenha(securityConfig.bCryptPasswordEncoder().encode(usuario.getSenha()));
+        usuarioService.addUsuario(user);
+
+        return ResponseEntity.ok(user);
     }
 
-    @PostMapping(value = "/validarsenha")
-    public ResponseEntity<Boolean> validarSenha(@RequestBody UsuarioDTO obj){
+    @DeleteMapping(value = "{id}")
+    public ResponseEntity<Boolean> deleteUsuario(@PathVariable Integer id) throws NotFoundExceptions{
 
-        Optional<Usuario> usuario = usuarioService.buscarLogin(obj.getLogin());
+        Optional<Usuario> user = usuarioService.buscarPorId(id);
 
-        if(usuario.isEmpty()) {
-            //System.out.println("caiu aqui!");
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(false);
+        if(user == null){
+            return ResponseEntity.badRequest().body(false);
         }
 
-         boolean valid = false;
+        usuarioService.removeUsuario(id);
 
-        Usuario user = usuario.get();
-         valid = encoder.matches(obj.getSenha(), user.getSenha());
+        return ResponseEntity.ok(true);
 
-        if(valid == false){
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(false);
-        }
-
-        return ResponseEntity.status(HttpStatus.OK).body(valid);
     }
 
 }

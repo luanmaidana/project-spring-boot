@@ -43,7 +43,30 @@ public class UsuarioService {
 
     public Usuario addUsuario(Usuario obj) {
 
-        return repo.save(obj);
+        repo.save(obj);
+        repo.flush();
+        return obj;
+
+    }
+
+    public Boolean removeUsuario(Integer id){
+
+        Optional<Usuario> user = repo.findById(id);
+
+        repo.delete(user.get());
+        repo.flush();
+        return true;
+
+    }
+
+    public Boolean atualizarUsuario(Usuario entity){
+
+
+
+        repo.save(entity);
+        repo.flush();
+
+        return true;
 
     }
 
