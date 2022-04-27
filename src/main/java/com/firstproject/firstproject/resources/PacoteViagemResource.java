@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Optional;
 import com.firstproject.firstproject.domain.PacoteViagem;
 import com.firstproject.firstproject.domain.Usuario;
+import com.firstproject.firstproject.dtos.PacoteViagemDTO;
 import com.firstproject.firstproject.services.PacoteViagemService;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +14,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
@@ -51,11 +53,11 @@ public class PacoteViagemResource {
     }
 
     @RequestMapping(method = RequestMethod.POST)
-    public ResponseEntity<PacoteViagem> postCategoria(@AuthenticationPrincipal Usuario usuario, @RequestBody PacoteViagem obj){
+    public ResponseEntity<PacoteViagemDTO> postCategoria(@RequestHeader("Authorization") String token, @RequestBody PacoteViagemDTO obj){
         
-        obj.setUsuarios(usuario);
+        String token2 = token;
 
-        obj = service.addPacoteViagem(obj);
+        service.insertPacoteViagem(obj);
         
         return new ResponseEntity<>(obj, HttpStatus.OK);
 

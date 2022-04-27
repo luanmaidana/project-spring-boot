@@ -1,11 +1,13 @@
 package com.firstproject.firstproject.Config;
 
 import com.firstproject.firstproject.Security.JWTAuthenticationFilter;
+import com.firstproject.firstproject.Security.JWTAuthorizationFilter;
 import com.firstproject.firstproject.Security.JWTUtil;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -33,7 +35,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
         "/api/viagem/**",
         "/api/pacotes/**",
         "/api/destino/**",
-        "/api/usuarios/**",
+       // "/api/usuarios/**",
         "/login"
 
     };
@@ -42,7 +44,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
 
         "/api/viagem/**",
         "/api/pacotes/**",
-        "/api/destino/**",
+        "/api/destino/**"
 
     };
 
@@ -50,9 +52,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
     protected void configure(HttpSecurity http) throws Exception {
 
         http.cors().and().csrf().disable();
-        http.authorizeHttpRequests().antMatchers(private_matchers).permitAll();
-        // http.authorizeHttpRequests().antMatchers(HttpMethod.GET ,public_matchers_get).permitAll().anyRequest().authenticated();
+       // http.authorizeHttpRequests().antMatchers(private_matchers).permitAll();
+        http.authorizeHttpRequests().antMatchers(HttpMethod.GET ,public_matchers_get).permitAll().anyRequest().authenticated();
         http.addFilter(new JWTAuthenticationFilter(jwtUtil, authenticationManager()));
+        http.addFilter(new JWTAuthorizationFilter(authenticationManager(), jwtUtil, userDetailsService)); 
         http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
     }
 

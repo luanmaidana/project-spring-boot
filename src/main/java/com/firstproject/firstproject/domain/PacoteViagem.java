@@ -29,6 +29,7 @@ public class PacoteViagem implements Serializable {
     private Integer dias;
 
     @OneToOne
+    @JoinColumn(name = "viagem_id")
     private Viagem viagem;
 
     @ManyToMany(fetch = FetchType.EAGER)
@@ -68,7 +69,7 @@ public class PacoteViagem implements Serializable {
         return viagem;
     }
 
-    public void setNome(Viagem viagem){
+    public void setViagem(Viagem viagem){
         this.viagem = viagem;
     }
 
