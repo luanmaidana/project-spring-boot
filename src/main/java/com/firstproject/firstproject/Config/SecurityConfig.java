@@ -22,6 +22,7 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 @Configuration
 @EnableWebSecurity
+// @EnableGlobalMethodSecurity(prePostEnabled = true)
 public class SecurityConfig extends WebSecurityConfigurerAdapter{
     
     @Autowired
@@ -35,7 +36,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
         "/api/viagem/**",
         "/api/pacotes/**",
         "/api/destino/**",
-       // "/api/usuarios/**",
+        "/api/usuarios/**",
         "/login"
 
     };

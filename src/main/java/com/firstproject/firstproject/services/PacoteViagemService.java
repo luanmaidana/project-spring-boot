@@ -3,7 +3,6 @@ package com.firstproject.firstproject.services;
 import java.util.List;
 import java.util.Optional;
 
-import com.firstproject.firstproject.Security.JWTUtil;
 import com.firstproject.firstproject.domain.PacoteViagem;
 import com.firstproject.firstproject.domain.Usuario;
 import com.firstproject.firstproject.domain.Viagem;
@@ -54,19 +53,49 @@ public class PacoteViagemService {
 
     }
 
-    public PacoteViagem insertPacoteViagem(PacoteViagemDTO pacoteDTO){
+    public PacoteViagem insertPacoteViagem(PacoteViagemDTO pacoteDTO, String usuariologado){
         
         PacoteViagem pacote = new PacoteViagem();
 
         Viagem viagem = viagemrepo.findById(pacoteDTO.getViagem_id()).get();
 
-        //Usuario usuario1 = usuariorepo.buscarLogin(usuario.getLogin()).get();
+        Usuario usuario = usuariorepo.buscarLogin(usuariologado).get();
         
         pacote.setDias(pacoteDTO.getDias());
         pacote.setNome(pacoteDTO.getNome());
         pacote.setViagem(viagem);
-        // pacote.setUsuarios(usuario1);
+        pacote.setUsuarios(usuario);
         
         return addPacoteViagem(pacote);
+    }
+
+    public PacoteViagem update(Integer id, PacoteViagemDTO pacoteViagem){
+
+        PacoteViagem pacote = repo.getById(id);
+        Viagem viagem = viagemrepo.getById(pacoteViagem.getViagem_id());
+
+        if(pacote == null){
+            return null;
+        }
+
+        pacote.setNome(pacoteViagem.getNome());
+        pacote.setDias(pacoteViagem.getDias());
+        pacote.setViagem(viagem);
+        
+        return repo.save(pacote);
+
+    }
+
+    public Boolean delete(PacoteViagem pacoteViagem){
+
+        PacoteViagem pacote = repo.getById(pacoteViagem.getId());
+
+        if(pacote == null){
+            return false;
+        }
+
+        repo.delete(pacote);
+        return true;
+
     }
 }

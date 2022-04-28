@@ -53,6 +53,10 @@ public class PacoteViagem implements Serializable {
         return usuarios;
     }
 
+    // public void setUsuarios(List<Usuario> list) {
+    //     this.usuarios.addAll(list);
+    // }
+
     public void setUsuarios(Usuario usuario) {
         this.usuarios.add(usuario);
     }

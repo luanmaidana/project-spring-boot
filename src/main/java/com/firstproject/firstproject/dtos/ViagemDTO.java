@@ -6,8 +6,11 @@ public class ViagemDTO {
 
     private Integer destino_id;
 
-    public Double getPreco() {
-        return preco;
+    private String nomeHotel;
+
+
+    public void setNomeHotel(String nomeHotel) {
+        this.nomeHotel = nomeHotel;
     }
 
     public void setPreco(Double preco) {
@@ -22,5 +25,11 @@ public class ViagemDTO {
         this.destino_id = destino_id;
     }
 
-    
+    public Double getPreco() {
+        return preco;
+    }
+
+    public String getNomeHotel() {
+        return nomeHotel;
+    }
 }

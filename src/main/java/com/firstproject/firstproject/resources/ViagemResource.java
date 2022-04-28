@@ -1,16 +1,15 @@
 package com.firstproject.firstproject.resources;
 
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
-
 import com.firstproject.firstproject.domain.Viagem;
 import com.firstproject.firstproject.dtos.ViagemDTO;
+import com.firstproject.firstproject.model.ResponseModel;
 import com.firstproject.firstproject.services.ViagemService;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -26,26 +25,101 @@ public class ViagemResource {
     @Autowired
     private ViagemService viagemService;
 
-    @GetMapping()
-    public ResponseEntity<List<Viagem>> listarTodos(){
+    // Método retorna todas as viagens cadastradas
+    @RequestMapping(method = RequestMethod.GET)
+    public ResponseEntity<ResponseModel<Viagem>> listarTodos(){
 
-        return ResponseEntity.ok(viagemService.buscarTodos());
+        List<Viagem> viagens = new ArrayList<>();
+
+        try {
+            viagens = viagemService.buscarTodos();
+            return new ResponseEntity<>(new ResponseModel<>("Sucesso!", 200, viagens), HttpStatus.OK);
+            
+        } catch (Exception e) {
+            return new ResponseEntity<>(new ResponseModel<>("Viagem não encontrada!", 404, viagens),HttpStatus.NOT_FOUND);
+        }
+
+        
     }
 
+    // Método retorna apenas a viagem do id passado por parametro na url
     @RequestMapping(value = "{id}", method = RequestMethod.GET)
-    public ResponseEntity<Optional<Viagem>> buscarPorId(@PathVariable Integer id) throws NotFoundExceptions{
+    public ResponseEntity<ResponseModel<Viagem>> buscarPorId(@PathVariable Integer id) throws NotFoundExceptions{
 
-        Optional<Viagem> usuario = viagemService.buscarPorId(id);
+        Viagem viagem = new Viagem();
+        
+        List<Viagem> viagens = new ArrayList<>();
+       
+        try {
+            viagem  = viagemService.buscarPorId(id).get();
+            viagens.add(viagem);
+        } catch (Exception e) {
+            return new ResponseEntity<>(new ResponseModel<>("Viagem não encontrada!", 404, viagens),HttpStatus.NOT_FOUND);
+        }
 
-        return ResponseEntity.ok(usuario);
+        return new ResponseEntity<>(new ResponseModel<>("Sucesso!", 200, viagens), HttpStatus.OK);
+        
     }
 
+    // Método cria nova viagem
     @RequestMapping(method = RequestMethod.POST)
-    public ResponseEntity<ViagemDTO> post(@RequestBody ViagemDTO viagem){
+    public ResponseEntity<ResponseModel<ViagemDTO>> post(@RequestBody ViagemDTO viagem){
 
-        viagemService.insertViagem(viagem);
+        List<ViagemDTO> viagens = new ArrayList<>();
 
-        return new ResponseEntity<>(viagem, HttpStatus.OK);
+        try {
+            viagens.add(viagem);
+            viagemService.insert(viagem);
+            return new ResponseEntity<>(new ResponseModel<>("Sucesso!", 201, viagens), HttpStatus.CREATED);
+
+        } catch (Exception e) {
+            return new ResponseEntity<>(new ResponseModel<>("Não foi possível adicionar uma nova viagem!", 400, viagens), HttpStatus.BAD_REQUEST);
+        }
+
+
+    }
+
+    // Método deleta uma viagem pelo id
+    @RequestMapping(method = RequestMethod.DELETE)
+    public ResponseEntity<ResponseModel<Viagem>> delete(@PathVariable Integer id) throws NotFoundExceptions{
+
+        List<Viagem> viagens = new ArrayList<>();
+
+        Viagem viagem = viagemService.buscarPorId(id).get();
+
+        if(viagem == null){
+            return new ResponseEntity<>(new ResponseModel<>("Não foi possível localizar essa viagem!", 404, viagens), HttpStatus.NOT_FOUND);
+        }
+
+        try {
+            viagemService.delete(id);
+            viagens.add(viagem);
+            return new ResponseEntity<>(new ResponseModel<>("Viagem deletada com sucesso!", 200, viagens), HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(new ResponseModel<>("Não foi possível deletar essa viagem!", 400, viagens), HttpStatus.BAD_REQUEST);
+        }
+
+    }
+
+    // Método atualiza viagem correspondendo ai id
+    @RequestMapping(value = "{id}",method = RequestMethod.PUT)
+    public ResponseEntity<ResponseModel<Viagem>> update(@PathVariable Integer id, ViagemDTO viagemDTO) throws NotFoundExceptions{
+
+        List<Viagem> viagens = new ArrayList<>();
+
+        Viagem viagem = viagemService.buscarPorId(id).get();
+
+        if(viagem == null){
+            return new ResponseEntity<>(new ResponseModel<>("Não foi possível localizar essa viagem!", 404, viagens), HttpStatus.NOT_FOUND);
+        }
+
+        try {
+            viagens.add(viagemService.update(id, viagemDTO));
+            return new ResponseEntity<>(new ResponseModel<>("Viagem atualizada com sucesso!", 200, viagens), HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(new ResponseModel<>("Não foi possível atualizar essa viagem!", 400, viagens), HttpStatus.BAD_REQUEST);
+        }
+
 
     }
 

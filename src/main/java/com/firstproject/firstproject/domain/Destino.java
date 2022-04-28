@@ -31,7 +31,6 @@ public class Destino implements Serializable{
     public Destino() {
     }
 
-
     public Integer getId() {
         return id;
     }
@@ -56,7 +55,7 @@ public class Destino implements Serializable{
     public void setPais(String pais) {
         this.pais = pais;
     }
-
+    
     
 
 }

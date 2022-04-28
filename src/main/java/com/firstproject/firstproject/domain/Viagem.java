@@ -16,12 +16,16 @@ public class Viagem implements Serializable{
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
+
     @OneToOne
     @JoinColumn(name = "destino_id")
     private Destino destino;
 
     @Column(nullable = false)
     private Double preco;
+
+    @Column(nullable = false)
+    private String nomeHotel;
     
     public Viagem() {
     }
@@ -48,6 +52,13 @@ public class Viagem implements Serializable{
 
     public void setPreco(Double preco) {
         this.preco = preco;
+    }
+
+    public String getNomeHotel() {
+        return nomeHotel;
+    }
+    public void setNomeHotel(String nomeHotel) {
+        this.nomeHotel = nomeHotel;
     }
 
     @Override

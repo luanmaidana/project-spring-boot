@@ -24,30 +24,37 @@ public class ViagemService {
     @Autowired
     private DestinoRepository repoDestino;
 
-    // Método para buscar categoria por id
+    // Método para buscar viagem por id
     public Optional<Viagem> buscarPorId(Integer id) throws NotFoundExceptions{
-        Optional<Viagem> obj = repo.findById(id);
+        
+        Optional<Viagem> obj;
+
+        try {
+            obj = repo.findById(id);
+        } catch (Exception e) {
+            obj = null;
+        }
         
         if(obj.isEmpty()) { throw new NotFoundExceptions(404, "Não encontrado!");}
 
         return obj;
     }
 
+    // Método para buscar todas as viagens cadastradas
     public List<Viagem> buscarTodos(){
 
         List<Viagem> obj = repo.findAll();
+
+        if(obj.isEmpty()){
+            return null;
+        }
 
         return obj;
 
     }
 
-    public Viagem addViagem(Viagem viagem){
-
-        return repo.save(viagem);
-
-    }
-
-    public Viagem insertViagem(ViagemDTO viagemDto){
+    // Método para adicionar uma nova Viagem
+    public Viagem insert(ViagemDTO viagemDto){
 
         Viagem viagem = new Viagem();
 
@@ -55,11 +62,44 @@ public class ViagemService {
 
         viagem.setPreco(viagemDto.getPreco());
         viagem.setDestino(destino);
+        viagem.setNomeHotel(viagemDto.getNomeHotel());
 
-        this.addViagem(viagem);
-
-        return viagem;
+        return repo.save(viagem);
 
     }
 
+    // Método para atualizar viagem por id
+
+    public Viagem update(Integer id, ViagemDTO viagemDto){
+        
+        Viagem v = repo.getById(id);
+
+        Destino destino = repoDestino.findById(viagemDto.getDestino_id()).get();
+
+        if(v == null){
+            return null;
+        }
+
+        v.setId(id);
+        v.setPreco(viagemDto.getPreco());
+        v.setDestino(destino);
+        v.setNomeHotel(viagemDto.getNomeHotel());
+
+        return repo.save(v);
+    }
+
+    // Método para deletar viagem pelo id
+
+    public Boolean delete(Integer id){
+        
+        Viagem v = repo.getById(id);
+
+        if(v == null){
+            return false;
+        }
+
+        repo.delete(v);
+
+        return true;
+    }
 }
