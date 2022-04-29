@@ -79,7 +79,7 @@ public class DestinoResource {
     }
 
     // Método atualiza o destino correspondente ao id passado por parametro
-    @RequestMapping(method = RequestMethod.PUT)
+    @RequestMapping(value = "{id}",method = RequestMethod.PUT)
     public ResponseEntity<ResponseModel<Destino>> update(@PathVariable Integer id, @RequestBody Destino destino) throws NotFoundExceptions{
 
         List<Destino> destinos = new ArrayList<>();
@@ -100,7 +100,7 @@ public class DestinoResource {
 
     // Método dele o destino correspondente ao id passado por parametro
 
-    @RequestMapping(method = RequestMethod.DELETE)
+    @RequestMapping(value = "{id}", method = RequestMethod.DELETE)
     public ResponseEntity<ResponseModel<Destino>> delete(@PathVariable Integer id) throws NotFoundExceptions{
 
         List<Destino> destinos = new ArrayList<>();

@@ -8,7 +8,6 @@ import com.firstproject.firstproject.domain.Usuario;
 import com.firstproject.firstproject.domain.Viagem;
 import com.firstproject.firstproject.dtos.PacoteViagemDTO;
 import com.firstproject.firstproject.repositories.PacoteViagemRepository;
-import com.firstproject.firstproject.repositories.ViagemRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -23,7 +22,7 @@ public class PacoteViagemService {
     private PacoteViagemRepository repo;
 
     @Autowired
-    private ViagemRepository viagemrepo;
+    private ViagemService viagemservice;
 
     @Autowired
     private UsuarioService usuariorepo;
@@ -53,11 +52,11 @@ public class PacoteViagemService {
 
     }
 
-    public PacoteViagem insertPacoteViagem(PacoteViagemDTO pacoteDTO, String usuariologado){
+    public PacoteViagem insertPacoteViagem(PacoteViagemDTO pacoteDTO, String usuariologado) throws NotFoundExceptions{
         
         PacoteViagem pacote = new PacoteViagem();
 
-        Viagem viagem = viagemrepo.findById(pacoteDTO.getViagem_id()).get();
+        Viagem viagem = viagemservice.buscarPorId(pacoteDTO.getViagem_id()).get();
 
         Usuario usuario = usuariorepo.buscarLogin(usuariologado).get();
         
@@ -69,10 +68,10 @@ public class PacoteViagemService {
         return addPacoteViagem(pacote);
     }
 
-    public PacoteViagem update(Integer id, PacoteViagemDTO pacoteViagem){
+    public PacoteViagem update(Integer id, PacoteViagemDTO pacoteViagem) throws NotFoundExceptions{
 
-        PacoteViagem pacote = repo.getById(id);
-        Viagem viagem = viagemrepo.getById(pacoteViagem.getViagem_id());
+        PacoteViagem pacote = buscar(id).get();
+        Viagem viagem = viagemservice.buscarPorId(pacoteViagem.getViagem_id()).get();
 
         if(pacote == null){
             return null;

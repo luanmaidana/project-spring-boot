@@ -42,8 +42,8 @@ public class Viagem implements Serializable{
         return destino;
     }
 
-    public void setDestino(Destino destino2) {
-        this.destino = destino2;
+    public void setDestino(Destino destino) {
+        this.destino = destino;
     }
 
     public Double getPreco() {

@@ -6,7 +6,6 @@ import java.util.Optional;
 import com.firstproject.firstproject.domain.Destino;
 import com.firstproject.firstproject.domain.Viagem;
 import com.firstproject.firstproject.dtos.ViagemDTO;
-import com.firstproject.firstproject.repositories.DestinoRepository;
 import com.firstproject.firstproject.repositories.ViagemRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,7 +21,7 @@ public class ViagemService {
     private ViagemRepository repo;
 
     @Autowired
-    private DestinoRepository repoDestino;
+    private DestinoService destinoService;
 
     // Método para buscar viagem por id
     public Optional<Viagem> buscarPorId(Integer id) throws NotFoundExceptions{
@@ -54,11 +53,11 @@ public class ViagemService {
     }
 
     // Método para adicionar uma nova Viagem
-    public Viagem insert(ViagemDTO viagemDto){
+    public Viagem insert(ViagemDTO viagemDto) throws NotFoundExceptions{
 
         Viagem viagem = new Viagem();
 
-        Destino destino = repoDestino.findById(viagemDto.getDestino_id()).get();
+        Destino destino = destinoService.buscarPorId(viagemDto.getDestino_id()).get();
 
         viagem.setPreco(viagemDto.getPreco());
         viagem.setDestino(destino);
@@ -70,22 +69,23 @@ public class ViagemService {
 
     // Método para atualizar viagem por id
 
-    public Viagem update(Integer id, ViagemDTO viagemDto){
+    public Viagem update(Integer id, ViagemDTO viagemDto) throws NotFoundExceptions{
         
-        Viagem v = repo.getById(id);
+        Viagem v = repo.findById(id).get();
 
-        Destino destino = repoDestino.findById(viagemDto.getDestino_id()).get();
+        Destino destino = destinoService.buscarPorId(viagemDto.getDestino_id()).get();
 
         if(v == null){
             return null;
         }
 
-        v.setId(id);
+       // v.setId(id);
         v.setPreco(viagemDto.getPreco());
         v.setDestino(destino);
         v.setNomeHotel(viagemDto.getNomeHotel());
+        repo.save(v);
 
-        return repo.save(v);
+        return v;
     }
 
     // Método para deletar viagem pelo id

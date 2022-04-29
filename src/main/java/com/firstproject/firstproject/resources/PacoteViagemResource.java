@@ -91,7 +91,8 @@ public class PacoteViagemResource {
         List<PacoteViagem> pacotes = new ArrayList<>();
 
         try {
-            pacotes.add(service.update(id, pacoteViagemDTO));
+            PacoteViagem x = service.update(id, pacoteViagemDTO);
+            pacotes.add(x);
 
             return new ResponseEntity<>(new ResponseModel<>("Pacote de viagem atualizado com sucesso!", 200, pacotes), HttpStatus.OK);
         } catch (Exception e) {

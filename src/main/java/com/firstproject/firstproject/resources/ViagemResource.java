@@ -80,7 +80,7 @@ public class ViagemResource {
     }
 
     // Método deleta uma viagem pelo id
-    @RequestMapping(method = RequestMethod.DELETE)
+    @RequestMapping(value = "{id}", method = RequestMethod.DELETE)
     public ResponseEntity<ResponseModel<Viagem>> delete(@PathVariable Integer id) throws NotFoundExceptions{
 
         List<Viagem> viagens = new ArrayList<>();
@@ -103,19 +103,16 @@ public class ViagemResource {
 
     // Método atualiza viagem correspondendo ai id
     @RequestMapping(value = "{id}",method = RequestMethod.PUT)
-    public ResponseEntity<ResponseModel<Viagem>> update(@PathVariable Integer id, ViagemDTO viagemDTO) throws NotFoundExceptions{
+    public ResponseEntity<ResponseModel<Viagem>> update(@PathVariable Integer id, @RequestBody ViagemDTO viagemDTO) throws NotFoundExceptions{
 
         List<Viagem> viagens = new ArrayList<>();
 
-        Viagem viagem = viagemService.buscarPorId(id).get();
-
-        if(viagem == null){
-            return new ResponseEntity<>(new ResponseModel<>("Não foi possível localizar essa viagem!", 404, viagens), HttpStatus.NOT_FOUND);
-        }
+        Viagem viagem = new Viagem();
 
         try {
-            viagens.add(viagemService.update(id, viagemDTO));
-            return new ResponseEntity<>(new ResponseModel<>("Viagem atualizada com sucesso!", 200, viagens), HttpStatus.OK);
+            viagem = viagemService.update(id, viagemDTO);
+            viagens.add(viagem);
+            return new ResponseEntity<>(new ResponseModel<Viagem>("Viagem atualizada com sucesso!", 200, viagens), HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(new ResponseModel<>("Não foi possível atualizar essa viagem!", 400, viagens), HttpStatus.BAD_REQUEST);
         }
